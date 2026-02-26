@@ -69,12 +69,14 @@ ticker = sample_tickers[0]
 plt.figure()
 plt.plot(rolling_vol[ticker])
 plt.title(f"Rolling volatility: {ticker}")
+plt.savefig('../../assets/plots/rolling_volatility.png')
 plt.show()
 
 #Средние и стандартные отклонения по всем акциям
 plt.figure()
 plt.hist(norm_returns.std(), bins=50)
 plt.title("Std of normalized returns (cross-section)")
+plt.savefig('../../assets/plots/std_norm_returns.png')
 plt.show()
 
 #Cross-sectional mean во времени
@@ -83,6 +85,7 @@ cross_sectional_mean = norm_returns.mean(axis=1)
 plt.figure()
 plt.plot(cross_sectional_mean)
 plt.title("Cross-sectional mean of normalized returns")
+plt.savefig('../../assets/plots/mean_norm_returns.png')
 plt.show()
 
 #Корреляционная структура: до и после
@@ -92,9 +95,11 @@ corr_norm = norm_returns.corr()
 plt.figure()
 plt.hist(corr_raw.values.flatten(), bins=100)
 plt.title("Correlations (raw log-returns)")
+plt.savefig('../../assets/plots/corr_raw_log-returns.png')
 plt.show()
 
 plt.figure()
 plt.hist(corr_norm.values.flatten(), bins=100)
 plt.title("Correlations (normalized returns)")
+plt.savefig('../../assets/plots/corr_norm_log-returns.png')
 plt.show()
