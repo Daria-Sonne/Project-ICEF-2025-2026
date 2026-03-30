@@ -1,14 +1,14 @@
-# Фильтрация, очистка и подготовка данных (из уже скачанного CSV)
+# Filtering, cleaning and preparing data (from an already downloaded CSV)
 import pandas as pd
 from tqdm import tqdm
 
 
-# 1. Читаем сырой файл (который создали на первом этапе)
+# 1. Reading the raw file (which was created in the first stage)
 raw_file = "../../data/raw/sp500_adj_close_raw_2012-01-01_to_20251209.csv"
 prices_raw = pd.read_csv(raw_file, index_col=0, parse_dates=True)
 print(f"Загружен сырой файл: {prices_raw.shape}")
 
-# 2. Фильтрация
+# 2. Filtration
 min_days_required = 252 * 5
 max_missing_ratio = 0.05
 
@@ -27,7 +27,7 @@ for ticker in tqdm(prices_raw.columns, desc="Фильтрация"):
 
     good_tickers.append(ticker)
 
-#3. Загружаем базовый файл с секторами и индустриями и фильтруем
+#3. Load the base file with sectors and industries and filter
 df = pd.read_csv("../../data/raw/sectors_industry.csv")
 df_filtered = df[df['ticker'].isin(good_tickers)].copy()
 
