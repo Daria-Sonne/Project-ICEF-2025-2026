@@ -24,7 +24,7 @@ model = rpt.Pelt(model="l2").fit(X)
 penalties = [1, 2, 5, 10, 20, 50]
 all_breakpoints = {}
 
-print("\n--- Running Lavielle/Pelt with different penalties ---")
+print("\n--- Running Pelt with different penalties ---")
 
 for pen in penalties:
     bkpts = model.predict(pen=pen)
