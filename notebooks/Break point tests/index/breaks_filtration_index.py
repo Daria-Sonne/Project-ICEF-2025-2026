@@ -2,7 +2,7 @@ import pandas as pd
 
 
 # 1. LOAD MATCHES
-df = pd.read_csv("../../data/tests/breakpoint_matches.csv", parse_dates=["kcp_date"])
+df = pd.read_csv("../../../data/tests/index/index_breakpoint_matches.csv", parse_dates=["kcp_date"])
 print(f"Total matches: {len(df)}")
 
 # 2. FILTER BY DISTANCE
@@ -39,4 +39,4 @@ final_df = pd.DataFrame({"date": final_breaks})
 print("\nFINAL BREAKPOINTS:")
 print(final_df)
 
-final_df.to_csv("../../data/tests/final_breakpoints.csv", index=False)
+final_df.to_csv("../../../data/tests/index/index_final_breakpoints.csv", index=False)

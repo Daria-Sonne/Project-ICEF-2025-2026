@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 
 
 # 1. LOAD DATA
-state_path = "../../data/preprocessed/state_vectors_scaled.csv"
-breaks_path = "../../data/tests/final_breakpoints.csv"
+state_path = "../../../data/preprocessed/state_vectors_scaled.csv"
+breaks_path = "../../../data/tests/Corr/corr_final_breakpoints.csv"
 
 df = pd.read_csv(state_path, index_col=0, parse_dates=True)
 breaks = pd.read_csv(breaks_path, parse_dates=["date"])
@@ -26,11 +26,11 @@ for i, row in breaks.iterrows():
     plt.axvline(row["date"], color="black", linestyle="--",
                 label="Breakpoint" if i == 0 else "")
 
-plt.title("Aggregate Market State with Breakpoints")
+plt.title("Aggregate Market State with corr_Breakpoints")
 plt.legend()
 plt.grid(alpha=0.3)
 
-plt.savefig("../../assets/plots/final_breakpoints_aggregate.png")
+plt.savefig("../../../assets/plots/tests_corr/corr_final_breakpoints_aggregate.png")
 plt.show()
 
 
@@ -60,7 +60,7 @@ for _, row in breaks.iterrows():
     results.append(stats)
 
 changes_df = pd.DataFrame(results)
-changes_df.to_csv("../../data/tests/final_breakpoint_changes.csv", index=False)
+changes_df.to_csv("../../../data/tests/Corr/corr_final_breakpoint_changes.csv", index=False)
 
 print("\nChanges saved.")
 

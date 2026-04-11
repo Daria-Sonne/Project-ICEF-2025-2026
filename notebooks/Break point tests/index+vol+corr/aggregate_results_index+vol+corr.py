@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # 1. LOAD DATA
-data_path = "../../data/preprocessed/state_vectors_scaled.csv"
+data_path = "../../../data/preprocessed/state_index+vol+corr_scaled.csv"
 
 df = pd.read_csv(data_path, index_col=0, parse_dates=True)
 X = df.values
@@ -13,8 +13,8 @@ print(f"Loaded state vectors: {df.shape}")
 
 
 # 2. LOAD BREAKPOINTS
-kcp_path = "../../data/tests/kcp_stable_breakpoints.csv"
-pelt_path = "../../data/tests/pelt_stable_breakpoints.csv"
+kcp_path = "../../../data/tests/index+vol+corr/kcp_index+vol+corr_stable_breakpoints.csv"
+pelt_path = "../../../data/tests/index+vol+corr/pelt_index+vol+corr_stable_breakpoints.csv"
 
 kcp_df = pd.read_csv(kcp_path)
 pelt_df = pd.read_csv(pelt_path)
@@ -73,7 +73,7 @@ print(f"PELT unique: {len(pelt_unique)}")
 
 
 # 5. SAVE RESULTS
-matches_df.to_csv("../../data/tests/breakpoint_matches.csv", index=False)
+matches_df.to_csv("../../../data/tests/index+vol+corr/index+vol+corr_breakpoint_matches.csv", index=False)
 
 # 6. SUBPLOTS (KCP vs PELT)
 aggregate = X.mean(axis=1)
@@ -86,7 +86,7 @@ axes[0].plot(dates, aggregate, label="Aggregate state", alpha=0.8)
 for idx in kcp_indices:
     axes[0].axvline(dates[idx], linestyle="--", color="red")
 
-axes[0].set_title("KCP Breakpoints (Aggregate)")
+axes[0].set_title("KCP index+vol+corr_Breakpoints (Aggregate)")
 axes[0].legend()
 axes[0].grid(alpha=0.3)
 
@@ -96,12 +96,12 @@ axes[1].plot(dates, aggregate, label="Aggregate state", alpha=0.8)
 for idx in pelt_indices:
     axes[1].axvline(dates[idx], linestyle="--", color="blue")
 
-axes[1].set_title("PELT Breakpoints (Aggregate)")
+axes[1].set_title("PELT index+vol+corr_Breakpoints (Aggregate)")
 axes[1].legend()
 axes[1].grid(alpha=0.3)
 
 plt.tight_layout()
-plt.savefig("../../assets/plots/kcp_vs_pelt_aggregate_subplots.png")
+plt.savefig("../../../assets/plots/tests_index+vol+corr/index+vol+corr_kcp_vs_pelt_aggregate_subplots.png")
 plt.show()
 
 # 6. VISUALIZATION (AGGREGATE)
@@ -128,5 +128,5 @@ plt.title("Breakpoint Comparison (KCP vs PELT)")
 plt.legend()
 plt.grid(alpha=0.3)
 
-plt.savefig("../../assets/plots/kcp_vs_pelt_overlay.png")
+plt.savefig("../../../assets/plots/tests_index+vol+corr/index+vol+corr_kcp_vs_pelt_overlay.png")
 plt.show()

@@ -5,7 +5,7 @@ from collections import Counter
 
 
 # 1. LOAD DATA
-data_path = "../../data/preprocessed/state_vectors_scaled.csv"
+data_path = "../../../data/preprocessed/market_disp_state_scaled.csv"
 
 df = pd.read_csv(data_path, index_col=0, parse_dates=True)
 print(f"Loaded state vectors: {df.shape}")
@@ -67,13 +67,13 @@ for i, col in enumerate(df.columns):
 
 plt.tight_layout()
 plt.grid(alpha=0.3)
-plt.savefig("../../assets/plots/pelt_subplots_all_breaks.png")
+plt.savefig("../../../assets/plots/tests_index+vol/pelt_index+vol_subplots_all_breaks.png")
 plt.show()
 
 
 
 # 6. STABLE BREAKPOINTS
-threshold = 3
+threshold = 2
 stable_points = stability_df[stability_df["count"] >= threshold]
 
 fig, axes = plt.subplots(len(df.columns), 1, figsize=(14, 10), sharex=True)
@@ -88,11 +88,11 @@ for i, col in enumerate(df.columns):
 
 plt.tight_layout()
 plt.grid(alpha=0.3)
-plt.savefig("../../assets/plots/pelt_subplots_stable.png")
+plt.savefig("../../../assets/plots/tests_index+vol/pelt_index+vol_subplots_stable.png")
 plt.show()
 
 # 7. SAVE RESULTS
-stability_df.to_csv("../../data/tests/pelt_breakpoints_stability.csv", index=False)
-stable_points.to_csv("../../data/tests/pelt_stable_breakpoints.csv", index=False)
+stability_df.to_csv("../../../data/tests/index+vol/pelt_index+vol_breakpoints_stability.csv", index=False)
+stable_points.to_csv("../../../data/tests/index+vol/pelt_index+vol_stable_breakpoints.csv", index=False)
 
 print("\nResults saved.")
