@@ -82,7 +82,7 @@ for _, row in changes_df.iterrows():
     plt.grid(alpha=0.3)
 
     #plt.savefig(f"../../assets/plots/change_{date}.png")
-    plt.show()
+    #plt.show()
     plt.close()
 
 
@@ -113,5 +113,5 @@ for _, row in breaks.iterrows():
     plt.grid(alpha=0.3)
 
     #plt.savefig(f"../../assets/plots/local_{date}.png")
-    plt.show()
+    #plt.show()
     plt.close()

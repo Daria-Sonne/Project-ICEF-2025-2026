@@ -53,27 +53,27 @@ print("\n--- Most stable breakpoints ---")
 print(stability_df.head(10))
 
 
-# 5. VISUALIZATION (SUBPLOTS)
-fig, axes = plt.subplots(len(df.columns), 1, figsize=(14, 10), sharex=True)
-
-for i, col in enumerate(df.columns):
-    axes[i].plot(dates, X[:, i])
-    axes[i].set_title(col)
-
-    # all breakpoints
-    for pen, bkpts in all_breakpoints.items():
-        for b in bkpts[:-1]:
-            axes[i].axvline(dates[b], alpha=0.1, color="blue")
-
-plt.tight_layout()
-plt.grid(alpha=0.3)
-plt.savefig("../../../assets/plots/tests_index+vol+corr/pelt_index+vol+corr_subplots_all_breaks.png")
-plt.show()
+# # 5. VISUALIZATION (SUBPLOTS)
+# fig, axes = plt.subplots(len(df.columns), 1, figsize=(14, 10), sharex=True)
+#
+# for i, col in enumerate(df.columns):
+#     axes[i].plot(dates, X[:, i])
+#     axes[i].set_title(col)
+#
+#     # all breakpoints
+#     for pen, bkpts in all_breakpoints.items():
+#         for b in bkpts[:-1]:
+#             axes[i].axvline(dates[b], alpha=0.1, color="blue")
+#
+# plt.tight_layout()
+# plt.grid(alpha=0.3)
+# plt.savefig("../../../assets/plots/tests_index+vol+corr/pelt_index+vol+corr_subplots_all_breaks.png")
+# plt.show()
 
 
 
 # 6. STABLE BREAKPOINTS
-threshold = 2
+threshold = 3
 stable_points = stability_df[stability_df["count"] >= threshold]
 
 fig, axes = plt.subplots(len(df.columns), 1, figsize=(14, 10), sharex=True)

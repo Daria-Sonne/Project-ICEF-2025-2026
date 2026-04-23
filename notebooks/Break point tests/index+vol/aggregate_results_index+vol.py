@@ -106,27 +106,27 @@ plt.show()
 
 # 6. VISUALIZATION (AGGREGATE)
 
-plt.figure(figsize=(14, 6))
-plt.plot(dates, aggregate, label="Aggregate state", alpha=0.8)
-
-# matched
-for i, row in matches_df.iterrows():
-    plt.axvline(row["kcp_date"], color="black", linestyle="--", alpha=0.8,
-                label="Matched" if i == 0 else "")
-
-# KCP unique
-for i, idx in enumerate(kcp_unique):
-    plt.axvline(dates[idx], color="red", linestyle=":", alpha=0.6,
-                label="KCP unique" if i == 0 else "")
-
-# PELT unique
-for i, idx in enumerate(pelt_unique):
-    plt.axvline(dates[idx], color="blue", linestyle=":", alpha=0.6,
-                label="PELT unique" if i == 0 else "")
-
-plt.title("Breakpoint Comparison (KCP vs PELT)")
-plt.legend()
-plt.grid(alpha=0.3)
-
-plt.savefig("../../../assets/plots/tests_index+vol/index+vol_kcp_vs_pelt_overlay.png")
-plt.show()
+# plt.figure(figsize=(14, 6))
+# plt.plot(dates, aggregate, label="Aggregate state", alpha=0.8)
+#
+# # matched
+# for i, row in matches_df.iterrows():
+#     plt.axvline(row["kcp_date"], color="black", linestyle="--", alpha=0.8,
+#                 label="Matched" if i == 0 else "")
+#
+# # KCP unique
+# for i, idx in enumerate(kcp_unique):
+#     plt.axvline(dates[idx], color="red", linestyle=":", alpha=0.6,
+#                 label="KCP unique" if i == 0 else "")
+#
+# # PELT unique
+# for i, idx in enumerate(pelt_unique):
+#     plt.axvline(dates[idx], color="blue", linestyle=":", alpha=0.6,
+#                 label="PELT unique" if i == 0 else "")
+#
+# plt.title("Breakpoint Comparison (KCP vs PELT)")
+# plt.legend()
+# plt.grid(alpha=0.3)
+#
+# plt.savefig("../../../assets/plots/tests_index+vol/index+vol_kcp_vs_pelt_overlay.png")
+# plt.show()

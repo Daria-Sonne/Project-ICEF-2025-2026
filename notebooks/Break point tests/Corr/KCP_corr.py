@@ -76,7 +76,7 @@ plt.show()
 
 
 # 6. STABLE BREAKPOINTS (SUBPLOTS)
-threshold = 2
+threshold = 3
 stable_points = stability_df[stability_df["count"] >= threshold]
 
 fig, axes = plt.subplots(len(df.columns), 1, figsize=(14, 10), sharex=True)
