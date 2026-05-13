@@ -111,6 +111,12 @@ for ax, (title, data, color, linestyle, label) in zip(axes.flat, models):
 # S&P 500
 ax_sp = axes[4]
 ax_sp.plot(df_sp.index, df_sp['Close'], label='S&P 500 (Close)', color='#1f77b4', linewidth=1.5)
+
+# # add break lines from  corr
+# for i, d in enumerate(corr["date"]):
+#     ax_sp.axvline(d, color="black", linestyle="--", alpha=0.8,
+#                   label="corr breakpoints" if i == 0 else "")
+
 ax_sp.set_xlabel('Date')
 ax_sp.set_ylabel('Price (USD)')
 ax_sp.grid(True, linestyle='--', alpha=0.6)
