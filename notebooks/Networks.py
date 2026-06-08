@@ -22,10 +22,12 @@ print(f"Returns shape: {returns.shape}")
 # 2. DEFINE REGIMES
 # based on breakpoint analysis
 regimes = {
-    "pre_2016": ("2013-01-01", "2015-12-31"),
-    "transition_2018": ("2016-01-01", "2018-12-31"),
-    "covid": ("2020-02-01", "2021-06-30"),
-    "inflation_qt": ("2022-01-01", "2023-06-30"),}
+    "R1": ("2015-08-25", "2016-03-14"),
+    "R2": ("2017-06-27", "2018-02-09"),
+    "R3": ("2019-02-01", "2020-02-24"),
+    "R4": ("2020-02-24", "2020-06-15"),
+    "R5": ("2021-06-14", "2021-12-01"),
+    "R6": ("2025-04-10", "2026-04-10")}
 
 # 3. MST FUNCTION
 def build_mst(window_returns):
@@ -183,7 +185,7 @@ for regime_name, result in mst_results.items():
 # 7. SAVE RESULTS
 final_stats = pd.concat(all_stats)
 
-#final_stats.to_csv("../../../data/networks/mst_centrality_stats.csv",index=False)
+final_stats.to_csv("../data/preprocessed/mst_centrality_stats.csv",index=False)
 
 
 # 8. COMMUNITY DETECTION
