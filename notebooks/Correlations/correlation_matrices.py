@@ -6,11 +6,8 @@ import pickle
 
 window = 252        # 1 year
 min_periods = 126   # min half a year
-norm_returns = pd.read_csv(
-    "../../data/preprocessed/norm_returns.csv",
-    index_col=0,
-    parse_dates=True
-)
+norm_returns = pd.read_csv("../../data/preprocessed/norm_returns.csv",index_col=0,parse_dates=True)
+
 #Rolling correlation
 rolling_mean_corr = []
 
@@ -25,13 +22,11 @@ for t in tqdm(range(window, len(dates))):
     corr_values = corr_matrix.values
     upper = corr_values[np.triu_indices_from(corr_values, k=1)]
 
-    rolling_mean_corr.append({
-        "date": dates[t],
-        "mean_corr": np.nanmean(upper),
-        "median_corr": np.nanmedian(upper),
-        "std_corr": np.nanstd(upper),
-        "neg_corr_share": np.mean(upper < 0)
-    })
+    rolling_mean_corr.append({"date": dates[t],
+                              "mean_corr": np.nanmean(upper),
+                              "median_corr": np.nanmedian(upper),
+                              "std_corr": np.nanstd(upper),
+                              "neg_corr_share": np.mean(upper < 0)})
 
 rolling_corr_df = pd.DataFrame(rolling_mean_corr).set_index("date")
 
@@ -39,7 +34,7 @@ rolling_corr_df = pd.DataFrame(rolling_mean_corr).set_index("date")
 #Visualisation
 plt.figure()
 plt.plot(rolling_corr_df["mean_corr"])
-plt.title("Rolling mean correlation (1Y window)")
+plt.title("Rolling mean correlation")
 plt.savefig('../../assets/plots/rolling_mean_corr.png')
 plt.show()
 

@@ -22,11 +22,7 @@ def corr_pvalues(corr_matrix, T):
     r = corr_matrix.values
     t_stat = r * np.sqrt((T - 2) / (1 - r**2 + 1e-12))
     pvals = 2 * (1 - stats.t.cdf(np.abs(t_stat), df=T - 2))
-    return pd.DataFrame(
-        pvals,
-        index=corr_matrix.index,
-        columns=corr_matrix.columns
-    )
+    return pd.DataFrame(pvals, index=corr_matrix.index, columns=corr_matrix.columns)
 
 # Filtering step
 filtered_corr = {}
@@ -49,9 +45,7 @@ for date, corr_mat in rolling_corr.items():
         continue
 
     # FDR correction
-    reject, _, _, _ = multipletests(
-        pvals, alpha=FDR_ALPHA, method="fdr_bh"
-    )
+    reject, _, _, _ = multipletests(pvals, alpha=FDR_ALPHA, method="fdr_bh")
 
     # build filtered matrix
     filtered = corr_mat.copy()

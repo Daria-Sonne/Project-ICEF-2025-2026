@@ -41,10 +41,7 @@ for pen, bkpts in all_breakpoints.items():
 counts = Counter(all_bkpt_indices)
 
 # convert to DataFrame
-stability_df = pd.DataFrame({
-    "index": list(counts.keys()),
-    "count": list(counts.values())
-})
+stability_df = pd.DataFrame({"index": list(counts.keys()),"count": list(counts.values())})
 
 # add dates
 stability_df["date"] = stability_df["index"].apply(lambda i: dates[i])

@@ -29,24 +29,21 @@ def match_breakpoints(df1, df2, tolerance=10):
     return matches
 
 #Comparison
-pairs = [
-    ("corr", corr, "market", market),
-    ("corr", corr, "market_disp", market_disp),
-    ("corr", corr, "combined", combined),]
+pairs = [("corr", corr, "market", market),
+         ("corr", corr, "market_disp", market_disp),
+         ("corr", corr, "combined", combined),]
 
 results = []
 
 for name1, df1, name2, df2 in pairs:
     matches = match_breakpoints(df1, df2)
 
-    results.append({
-        "model_1": name1,
-        "model_2": name2,
-        "n_model_1": len(df1),
-        "n_model_2": len(df2),
-        "matches": len(matches),
-        "match_ratio": len(matches) / len(df1) if len(df1) > 0 else 0
-    })
+    results.append({"model_1": name1,
+                    "model_2": name2,
+                    "n_model_1": len(df1),
+                    "n_model_2": len(df2),
+                    "matches": len(matches),
+                    "match_ratio": len(matches) / len(df1) if len(df1) > 0 else 0})
 
 results_df = pd.DataFrame(results)
 print(results_df)
@@ -92,9 +89,9 @@ aggregate = state.mean(axis=1)
 fig, axes = plt.subplots(5, 1, figsize=(12, 13), sharex=True, sharey=False)
 # breakpoints
 models = [("corr", corr, "black", "--", "corr"),
-    ("market", market, "red", "-", "market"),
-    ("market+disp", market_disp, "green", ":", "market+disp"),
-    ("combined", combined, "green", "-.", "combined")]
+          ("market", market, "red", "-", "market"),
+          ("market+disp", market_disp, "green", ":", "market+disp"),
+          ("combined", combined, "green", "-.", "combined")]
 
 for ax, (title, data, color, linestyle, label) in zip(axes.flat, models):
     ax.plot(dates, aggregate, label="Aggregate state", alpha=0.7, color="blue")

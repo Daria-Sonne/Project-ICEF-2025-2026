@@ -21,10 +21,7 @@ min_periods = 126
 market_vol = market_return.rolling(window=window,min_periods=min_periods).std()
 
 # --- COMBINE ---
-combined = pd.concat([
-    corr,
-    market_return.rename("market_return"),
-    market_vol.rename("market_vol")], axis=1)
+combined = pd.concat([corr,market_return.rename("market_return"),market_vol.rename("market_vol")], axis=1)
 
 combined = combined.dropna()
 
@@ -34,10 +31,7 @@ print(combined.head())
 # --- SCALE ---
 scaler = StandardScaler()
 
-combined_scaled = pd.DataFrame(
-    scaler.fit_transform(combined),
-    index=combined.index,
-    columns=combined.columns)
+combined_scaled = pd.DataFrame(scaler.fit_transform(combined),index=combined.index, columns=combined.columns)
 
 # --- SAVE ---
 combined.to_csv("../../../data/preprocessed/state_index+vol+corr.csv")

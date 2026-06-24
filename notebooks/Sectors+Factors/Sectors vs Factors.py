@@ -27,6 +27,11 @@ regimes = {"R1_2015_2016":("2015-08-25", "2016-03-14"),
            "R5_2021":("2021-06-14", "2021-12-01"),
            "R6_2025":("2025-04-10", "2026-04-10")}
 
+regimes1 = {"R1": ("2014-01-02", "2015-08-24"),
+           "R2": ("2016-03-15","2017-06-26"),
+           "R3": ("2018-02-10", "2019-01-31"),
+           "R4": ("2020-06-16","2021-06-13"),
+           "R5": ("2021-12-02","2025-04-9"),}
 
 # 5. COLUMN DETECTION
 external_cols = [c for c in external_ret.columns]
@@ -71,12 +76,12 @@ for regime_name, (start, end) in regimes.items():
     # HEATMAP
     plt.figure(figsize=(9, 6))
     sns.heatmap(sector_external_corr,
-        cmap="coolwarm",
-        center=0,
-        vmin=-1,
-        vmax=1,
-        annot=True,
-        fmt=".2f")
+                cmap="coolwarm",
+                center=0,
+                vmin=-1,
+                vmax=1,
+                annot=True,
+                fmt=".2f")
 
     plt.title(f"Sector vs External Factors\n{regime_name}")
     plt.tight_layout()

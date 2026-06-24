@@ -37,14 +37,11 @@ for date, corr_mat in rolling_corr.items():
     # 4 Number of significant factors (Kaiser rule: eigenvalues Kaiser rule > 1)
     n_factors_kaiser = np.sum(eigvals > 1)
 
-    results.append({
-        "date": date,
-        "mean_corr": mean_corr,
-        "std_corr": std_corr,
-        "share_negative": share_negative,
-        "n_factors_kaiser": n_factors_kaiser,
-
-    })
+    results.append({"date": date,
+                    "mean_corr": mean_corr,
+                    "std_corr": std_corr,
+                    "share_negative": share_negative,
+                    "n_factors_kaiser": n_factors_kaiser})
 
 # Convert to DataFrame
 state_vectors = pd.DataFrame(results)
@@ -62,11 +59,9 @@ state_vectors.to_csv("../../data/preprocessed/state_vectors.csv")
 #Standartization
 scaler = StandardScaler()
 
-state_vectors_scaled = pd.DataFrame(
-    scaler.fit_transform(state_vectors),
-    index=state_vectors.index,
-    columns=state_vectors.columns
-)
+state_vectors_scaled = pd.DataFrame(scaler.fit_transform(state_vectors),
+                                    index=state_vectors.index,
+                                    columns=state_vectors.columns)
 
 print("\nScaled preview:")
 print(state_vectors_scaled.head())
@@ -76,7 +71,13 @@ state_vectors_scaled.to_csv("../../data/preprocessed/state_vectors_scaled.csv")
 
 
 # Checking whether there is any correlation between features
-sns.heatmap(state_vectors.corr(), annot=True, cmap="coolwarm")
-plt.title("Correlation between state features")
+state_vectors_plot = state_vectors.rename(columns={"mean_corr": "Mean Corr",
+                                                   "std_corr": "Std Corr",
+                                                   "share_negative": "Neg Share",
+                                                   "n_factors_kaiser": "Kaiser Factors"})
+
+plt.figure(figsize=(8,6))
+sns.heatmap(state_vectors_plot.corr(),annot=True,cmap="coolwarm",fmt=".2f")
+plt.tight_layout()
 plt.savefig('../../assets/plots/corr_state_features.png')
 plt.show()

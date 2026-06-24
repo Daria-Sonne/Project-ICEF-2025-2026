@@ -10,14 +10,18 @@ df = sector_factors.join(external, how="inner")
 
 
 # REGIMES
-regimes = {
-    "R1_2015_2016": ("2015-08-25", "2016-03-14"),
-    "R2_2017_2018": ("2017-06-27", "2018-02-09"),
-    "R3_2019_2020": ("2019-02-01", "2020-02-24"),
-    "R4_COVID": ("2020-02-24", "2020-06-15"),
-    "R5_2021": ("2021-06-14", "2021-12-01"),
-    "R6_2025": ("2025-04-10", "2026-04-10"),}
+regimes = {"R1_2015_2016": ("2015-08-25", "2016-03-14"),
+           "R2_2017_2018": ("2017-06-27", "2018-02-09"),
+           "R3_2019_2020": ("2019-02-01", "2020-02-24"),
+           "R4_COVID": ("2020-02-24", "2020-06-15"),
+           "R5_2021": ("2021-06-14", "2021-12-01"),
+           "R6_2025": ("2025-04-10", "2026-04-10"),}
 
+regimes1 = {"R1": ("2014-01-02", "2015-08-24"),
+           "R2": ("2016-03-15","2017-06-26"),
+           "R3": ("2018-02-10", "2019-01-31"),
+           "R4": ("2020-06-16","2021-06-13"),
+           "R5": ("2021-12-02","2025-04-9"),}
 
 
 # VARIABLES
@@ -69,11 +73,10 @@ for regime_name, (start, end) in regimes.items():
             controls = [x for x in external_cols if x != factor]
             pcorr = partial_corr( window,sector,factor,controls)
 
-            results.append({
-                "regime": regime_name,
-                "sector": sector,
-                "factor": factor,
-                "partial_corr": pcorr})
+            results.append({"regime": regime_name,
+                            "sector": sector,
+                            "factor": factor,
+                            "partial_corr": pcorr})
 
 
 # SAVE

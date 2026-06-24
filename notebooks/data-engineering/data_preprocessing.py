@@ -4,19 +4,14 @@ from tqdm import tqdm
 from statsmodels.tsa.stattools import adfuller
 import matplotlib.pyplot as plt
 
-# Загрузка отфильтрованных цен
-prices = pd.read_csv(
-    "../../data/preprocessed/sp500_adj_close_filtered.csv",
-    index_col=0,
-    parse_dates=True
-)
+# Loading filtered prices
+prices = pd.read_csv("../../data/preprocessed/sp500_adj_close_filtered.csv", index_col=0,parse_dates=True)
+print(f"Loaded prices: {prices.shape}")
 
-print(f"Загружены цены: {prices.shape}")
-
-# Лог-доходности
+# Log-returns
 log_returns = np.log(prices / prices.shift(1))
 
-# Удаляем первую строку с NaN
+# Delete the first row with NaN
 log_returns = log_returns.dropna(how="all")
 
 log_returns.to_csv("../../data/preprocessed/log_returns.csv")
@@ -32,12 +27,10 @@ for ticker in tqdm(log_returns.columns, desc="ADF тест"):
 
     adf_stat, p_value, _, _, critical_values, _ = adfuller(series, autolag="AIC")
 
-    adf_results.append({
-        "ticker": ticker,
-        "adf_stat": adf_stat,
-        "p_value": p_value,
-        "is_stationary_5pct": p_value < 0.05
-    })
+    adf_results.append({"ticker": ticker,
+                        "adf_stat": adf_stat,
+                        "p_value": p_value,
+                        "is_stationary_5pct": p_value < 0.05})
 
 adf_df = pd.DataFrame(adf_results)
 adf_df.to_csv("../../data/preprocessed/adf_stationarity_results.csv", index=False)
@@ -49,15 +42,12 @@ vol_window = 252   # 1 год
 min_periods = 126  # минимум полгода
 
 # Rolling volatility (std)
-rolling_vol = log_returns.rolling(
-    window=vol_window,
-    min_periods=min_periods
-).std()
+rolling_vol = log_returns.rolling(window=vol_window, min_periods=min_periods).std()
 
-# Нормализованные доходности
+# Normalized returns
 norm_returns = log_returns / rolling_vol
 
-# Удаляем периоды, где vol ещё не определена
+# remove periods where vol is not yet defined
 norm_returns = norm_returns.dropna(how="all")
 
 norm_returns.to_csv("../../data/preprocessed/norm_returns.csv")
@@ -68,18 +58,18 @@ ticker = sample_tickers[0]
 
 plt.figure()
 plt.plot(rolling_vol[ticker])
-plt.title(f"Rolling volatility: {ticker}")
+plt.title(f"Rolling volatility")
 plt.savefig('../../assets/plots/rolling_volatility.png')
 plt.show()
 
-#Средние и стандартные отклонения по всем акциям
+#Means and standard deviations for all stocks
 plt.figure()
 plt.hist(norm_returns.std(), bins=50)
 plt.title("Std of normalized returns (cross-section)")
 plt.savefig('../../assets/plots/std_norm_returns.png')
 plt.show()
 
-#Cross-sectional mean во времени
+#Cross-sectional mean in time
 cross_sectional_mean = norm_returns.mean(axis=1)
 
 plt.figure()
@@ -88,7 +78,7 @@ plt.title("Cross-sectional mean of normalized returns")
 plt.savefig('../../assets/plots/mean_norm_returns.png')
 plt.show()
 
-#Корреляционная структура: до и после
+#Correlation structure: before and after
 corr_raw = log_returns.corr()
 corr_norm = norm_returns.corr()
 

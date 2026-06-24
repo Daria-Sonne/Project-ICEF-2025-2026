@@ -32,11 +32,9 @@ for sector in sorted(sector_df["sector"].dropna().unique()):
     factor = pca.fit_transform(X_scaled)
     sector_factors[sector] = factor.flatten()
 
-    explained.append({
-        "sector": sector,
-        "explained_variance_ratio":
-            pca.explained_variance_ratio_[0],
-        "n_stocks": len(tickers)})
+    explained.append({"sector": sector,
+                      "explained_variance_ratio": pca.explained_variance_ratio_[0],
+                      "n_stocks": len(tickers)})
 
 # SAVE
 sector_factors.to_csv( "../../data/sectors/sector_pca_factors.csv")

@@ -43,13 +43,11 @@ for k in kcp_indices:
             best_dist = dist
 
     if best_match is not None:
-        matches.append({
-            "kcp_index": k,
-            "pelt_index": best_match,
-            "kcp_date": dates[k],
-            "pelt_date": dates[best_match],
-            "distance_days": best_dist
-        })
+        matches.append({"kcp_index": k,
+                        "pelt_index": best_match,
+                        "kcp_date": dates[k],
+                        "pelt_date": dates[best_match],
+                        "distance_days": best_dist})
         used_pelt.add(best_match)
 
 # DataFrame of matches

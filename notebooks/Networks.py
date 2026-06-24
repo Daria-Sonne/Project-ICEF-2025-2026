@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 from scipy.sparse.csgraph import minimum_spanning_tree
 from networkx.algorithms.community import greedy_modularity_communities
 
@@ -18,16 +19,18 @@ ticker_to_sector = dict(zip(sector_df["ticker"], sector_df["sector"]))
 
 print(f"Returns shape: {returns.shape}")
 
+all_sectors = sorted({str(s) for s in ticker_to_sector.values()})
+cmap = plt.cm.tab20
+sector_to_color = {s: cmap(i % 20) for i, s in enumerate(all_sectors)}
 
 # 2. DEFINE REGIMES
 # based on breakpoint analysis
-regimes = {
-    "R1": ("2015-08-25", "2016-03-14"),
-    "R2": ("2017-06-27", "2018-02-09"),
-    "R3": ("2019-02-01", "2020-02-24"),
-    "R4": ("2020-02-24", "2020-06-15"),
-    "R5": ("2021-06-14", "2021-12-01"),
-    "R6": ("2025-04-10", "2026-04-10")}
+regimes = {"R1": ("2015-08-25", "2016-03-14"),
+           "R2": ("2017-06-27", "2018-02-09"),
+           "R3": ("2019-02-01", "2020-02-24"),
+           "R4": ("2020-02-24", "2020-06-15"),
+           "R5": ("2021-06-14", "2021-12-01"),
+           "R6": ("2025-04-10", "2026-04-10")}
 
 # 3. MST FUNCTION
 def build_mst(window_returns):
@@ -51,11 +54,7 @@ def build_mst(window_returns):
 
     for i, j in zip(rows, cols):
 
-        G.add_edge(
-            tickers[i],
-            tickers[j],
-            weight=dist.iloc[i, j],
-            corr=corr.iloc[i, j])
+        G.add_edge(tickers[i], tickers[j], weight=dist.iloc[i, j], corr=corr.iloc[i, j])
 
     return G, corr, dist
 
@@ -73,10 +72,9 @@ for regime_name, (start, end) in regimes.items():
     print(f"Window shape: {window.shape}")
 
     G, corr, dist = build_mst(window)
-    mst_results[regime_name] = {
-        "graph": G,
-        "corr": corr,
-        "dist": dist}
+    mst_results[regime_name] = {"graph": G,
+                                "corr": corr,
+                                "dist": dist}
 
     print(f"Nodes: {G.number_of_nodes()}")
     print(f"Edges: {G.number_of_edges()}")
@@ -91,71 +89,55 @@ for regime_name, result in mst_results.items():
     # CENTRALITY
     eigen_cent = nx.eigenvector_centrality(G, max_iter=1000)
 
-    # dataframe for sorting
-    cent_df = pd.DataFrame({
-        "ticker": list(G.nodes()),
-        "eigen": [eigen_cent[n] for n in G.nodes()]})
-
-    cent_df = cent_df.sort_values(by="eigen",ascending=False)
+    cent_df = pd.DataFrame({"ticker": list(G.nodes()),
+                            "eigen": [eigen_cent[n] for n in G.nodes()]})
+    cent_df = cent_df.sort_values(by="eigen", ascending=False)
 
     # KEEP ONLY TOP N NODES
-    TOP_N = 80
+    TOP_N = 70
     top_nodes = cent_df.head(TOP_N)["ticker"].tolist()
     G_sub = G.subgraph(top_nodes).copy()
 
     # recompute centrality on subgraph
-    eigen_sub = nx.eigenvector_centrality(G_sub,max_iter=1000)
+    eigen_sub = nx.eigenvector_centrality(G_sub, max_iter=1000)
 
     # LAYOUT
     plt.figure(figsize=(16, 12))
-    pos = nx.spring_layout(G_sub,seed=42,k=0.35)
+    pos = nx.spring_layout(G_sub, seed=42, k=0.35)
 
-    # COLORS BY SECTOR
-    unique_sectors = sorted([str(x) for x in set(ticker_to_sector.values())] )
-    sector_color_map = {sector: i for i, sector in enumerate(unique_sectors)}
-    node_colors = []
-
-    for node in G_sub.nodes():
-
-        sector = ticker_to_sector.get(node, "Unknown")
-
-        node_colors.append(sector_color_map.get(sector, 0))
+    # COLORS BY SECTOR — реальные RGBA, НЕ индексы
+    node_colors = [sector_to_color[str(ticker_to_sector.get(node, "Unknown"))]
+                   for node in G_sub.nodes()]
 
     # NODE SIZE = CENTRALITY
     node_sizes = [12000 * eigen_sub[n] for n in G_sub.nodes()]
 
-    # DRAW
-    nx.draw_networkx_nodes(
-        G_sub,
-        pos,
-        node_size=node_sizes,
-        node_color=node_colors,
-        cmap=plt.cm.tab20,
-        alpha=0.9)
-
-    nx.draw_networkx_edges(G_sub,pos,alpha=0.3)
+    # DRAW (без cmap — цвета уже заданы напрямую)
+    nx.draw_networkx_nodes(G_sub, pos, node_size=node_sizes,
+                           node_color=node_colors, alpha=0.9)
+    nx.draw_networkx_edges(G_sub, pos, alpha=0.3)
 
     # LABEL ONLY TOP HUBS
     top10 = cent_df.head(10)["ticker"].tolist()
+    labels = {node: node for node in G_sub.nodes() if node in top10}
+    nx.draw_networkx_labels(G_sub, pos, labels, font_size=14)
 
-    labels = {
-        node: node
-        for node in G_sub.nodes()
-        if node in top10}
+    # LEGEND — из того же маппинга, только секторы, реально присутствующие на графике
+    present = sorted({str(ticker_to_sector.get(n, "Unknown")) for n in G_sub.nodes()})
+    legend_elements = [mpatches.Patch(facecolor=sector_to_color[s],
+                                      edgecolor="black", label=s)
+                       for s in present]
+    plt.legend(handles=legend_elements, title="Sector",
+               loc="center left", bbox_to_anchor=(1.02, 0.5),
+               fontsize=12, title_fontsize=14)
 
-    nx.draw_networkx_labels(
-        G_sub,
-        pos,
-        labels,
-        font_size=9)
 
     # TITLE
-    plt.title(f"MST Network — {regime_name}",fontsize=18)
+    plt.title(f"MST Network — {regime_name}", fontsize=22)
     plt.axis("off")
     plt.tight_layout()
+    plt.savefig(f"../assets/plots/networks/{regime_name}.png", dpi=300, bbox_inches="tight")
     plt.show()
-
-
 
 # 6. CENTRALITY ANALYSIS
 all_stats = []
@@ -167,11 +149,10 @@ for regime_name, result in mst_results.items():
     eigen_cent = nx.eigenvector_centrality(G,max_iter=1000)
     between_cent = nx.betweenness_centrality(G)
 
-    stats_df = pd.DataFrame({
-        "ticker": list(G.nodes()),
-        "degree": [degree_cent[n] for n in G.nodes()],
-        "eigenvector": [eigen_cent[n] for n in G.nodes()],
-        "betweenness": [between_cent[n] for n in G.nodes()],})
+    stats_df = pd.DataFrame({"ticker": list(G.nodes()),
+                             "degree": [degree_cent[n] for n in G.nodes()],
+                             "eigenvector": [eigen_cent[n] for n in G.nodes()],
+                             "betweenness": [between_cent[n] for n in G.nodes()],})
 
     stats_df["sector"] = stats_df["ticker"].map(ticker_to_sector)
     stats_df["regime"] = regime_name
